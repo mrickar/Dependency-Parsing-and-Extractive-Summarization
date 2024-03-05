@@ -1,0 +1,11 @@
+python -m spacy convert tr_imst-ud-train.conllu . --converter conllu --n-sents 10
+
+python -m spacy convert tr_imst-ud-dev.conllu . --converter conllu --n-sents 10
+
+python -m spacy convert tr_imst-ud-test.conllu . --converter conllu --n-sents 10
+
+python -m spacy init config config.cfg --lang tr --pipeline parser --optimize accuracy --gpu  --force
+
+python -m spacy train config.cfg --output . --gpu-id 0 -- --paths.train tr_imst-ud-train.spacy --paths.dev tr_imst-ud-dev.spacy --training.max_epochs 100 --nlp.batch_size 32
+
+python -m spacy benchmark accuracy model-best tr_imst-ud-test.spacy  --gpu-id 0
